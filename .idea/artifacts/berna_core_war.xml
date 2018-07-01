@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="berna-core:war">
+    <output-path>$PROJECT_DIR$/berna-core/target</output-path>
+    <root id="archive" name="berna-core.war">
+      <element id="artifact" artifact-name="berna-core:war exploded" />
+    </root>
+  </artifact>
+</component>

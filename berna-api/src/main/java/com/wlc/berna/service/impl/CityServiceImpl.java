@@ -14,7 +14,16 @@ public class CityServiceImpl implements CityService {
 
     // 模拟数据库，存储 City 信息
     private static Map<Long, City> CITY_DB = new HashMap<>();
-
+    public  CityServiceImpl(){
+        for (int i=0;i<100;i++){
+            City city=new City();
+            city.setId(Long.valueOf(i));
+            city.setCityName("城市"+i);
+            city.setDescription("除外");
+            city.setProvinceId(Long.valueOf(i));
+            CITY_DB.put(Long.valueOf(i),city);
+        }
+    }
     @Override
     public List<City> findAllCity() {
         return new ArrayList<>(CITY_DB.values());
