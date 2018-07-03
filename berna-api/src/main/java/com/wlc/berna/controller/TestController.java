@@ -1,12 +1,12 @@
 package com.wlc.berna.controller;
 
+import com.wlc.berna.core.Test;
 import com.wlc.berna.service.CityService;
 import com.wlc.berna.vo.City;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 @RestController
 @RequestMapping(value = "/test")
 public class TestController {
@@ -16,7 +16,8 @@ public class TestController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Mono<City> findOneCity(@PathVariable("id") Long id) {
         System.err.println("findOneCity 1");
-        Mono mono = Mono.create(cityMonoSink -> cityMonoSink.success(cityService.findCityById(id)));
+        Mono mono = Mono.create(cityMonoSink -> cityMonoSink.success(cityService.findCityById(id))
+        );
         System.err.println("findOneCity 3");
         return mono;
     }
@@ -28,7 +29,7 @@ public class TestController {
     @RequestMapping(method = RequestMethod.GET)
     public Flux<City> findAllCity() {
         System.err.println("findAllCity 1");
-        Flux flux = Flux.create(cityFluxSink -> {
+        Flux<City> flux = Flux.create(cityFluxSink -> {
             cityService.findAllCity().forEach(city -> cityFluxSink.next(city));
             cityFluxSink.complete();
             try {
