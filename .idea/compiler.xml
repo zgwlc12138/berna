@@ -13,7 +13,7 @@
     <bytecodeTargetLevel>
       <module name="berna" target="1.8" />
       <module name="berna-api" target="1.8" />
-      <module name="berna-core" target="1.7" />
+      <module name="berna-core" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
