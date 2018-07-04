@@ -1,6 +1,5 @@
 package com.wlc.berna.controller;
 
-import com.wlc.berna.core.Test;
 import com.wlc.berna.service.CityService;
 import com.wlc.berna.vo.City;
 import org.springframework.beans.factory.annotation.Autowired;
