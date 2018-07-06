@@ -23,14 +23,19 @@ public class ServerTest {
         EventLoopGroup bossGroup=new NioEventLoopGroup();
         EventLoopGroup workerGroup=new NioEventLoopGroup();
         serverBootstrap.group(bossGroup,workerGroup);
-        serverBootstrap.channel(NioServerSocketChannel.class).childHandler(new ChannelInitializer<SocketChannel>(){
+        serverBootstrap.channel(NioServerSocketChannel.class)
+                .option(ChannelOption.SO_BACKLOG, 1024*10)
+                .option(ChannelOption.SO_SNDBUF,32*1024)
+                .option(ChannelOption.SO_RCVBUF,32*1024)
+                .childOption(ChannelOption.SO_KEEPALIVE, true)
+                .childHandler(new ChannelInitializer<SocketChannel>(){
             @Override
             protected void initChannel(SocketChannel channel) throws Exception {
                 channel.pipeline().addLast(new StringDecoder(Charset.forName("UTF-8")));
                 channel.pipeline().addLast(new StringEncoder(Charset.forName("UTF-8")));
                 channel.pipeline().addLast(new TestServerHandler());
             }
-        }).option(ChannelOption.SO_BACKLOG, 1024*10).childOption(ChannelOption.SO_KEEPALIVE, true);
+        });
         ChannelFuture f= serverBootstrap.bind(9090);
         try{
             f.channel().closeFuture().sync();
