@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/berna.iml" filepath="$PROJECT_DIR$/.idea/berna.iml" />
       <module fileurl="file://$PROJECT_DIR$/berna-api/berna-api.iml" filepath="$PROJECT_DIR$/berna-api/berna-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/berna-api/berna-api.iml" filepath="$PROJECT_DIR$/berna-api/berna-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/berna-core/berna-core.iml" filepath="$PROJECT_DIR$/berna-core/berna-core.iml" />
     </modules>
   </component>
