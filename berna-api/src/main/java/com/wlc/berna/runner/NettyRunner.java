@@ -1,6 +1,9 @@
 package com.wlc.berna.runner;
 
+import com.wlc.berna.http.HttpServer;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,10 +13,12 @@ import org.springframework.stereotype.Component;
  * @Modified by:
  */
 @Component
-public class NettyRunner {
-    @Value("netty.port")
-    private int port;
-    public void innit(){
+public class NettyRunner  implements ApplicationRunner {
+    @Value("${netty.port}")
+    private String port;
 
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        new Thread(new HttpServer(Integer.valueOf(port).intValue())).start();
     }
 }
