@@ -16,14 +16,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class Consumer {
 
-    private final static Logger logger = LoggerFactory
-            .getLogger(Consumer.class);
+    private final static Logger logger = LoggerFactory.getLogger(Consumer.class);
 
-    @JmsListener(destination = "queue1", containerFactory = "jmsQueueListener")
-    public void receiveQueue(final TextMessage text, Session session)
-            throws JMSException {
+    @JmsListener(destination = "sample.queue", containerFactory = "jmsQueueListener")
+    public void receiveQueue(final TextMessage text, Session session) throws JMSException {
         try {
-            logger.debug("Consumer收到的报文为:" + text.getText());
+            logger.info("Consumer收到的报文为:{}",text.getText());
+            text.acknowledge();// 使用手动签收模式，需要手动的调用，如果不在catch中调用session.recover()消息只会在重启服务后重发
+        } catch (Exception e) {
+            session.recover();// 此不可省略 重发信息使用
+        }
+    }
+    @JmsListener(destination = "sample.topic", containerFactory = "jmsQueueListener")
+    public void receiveTopic(final TextMessage text, Session session) throws JMSException {
+        try {
+            logger.info("Consumer收到的报文为:{}",text.getText());
             text.acknowledge();// 使用手动签收模式，需要手动的调用，如果不在catch中调用session.recover()消息只会在重启服务后重发
         } catch (Exception e) {
             session.recover();// 此不可省略 重发信息使用

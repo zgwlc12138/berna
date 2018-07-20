@@ -5,7 +5,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 /**
  * @Author: zhanggong
@@ -14,8 +15,9 @@ import org.springframework.test.context.junit4.SpringRunner;
  * @Modified by:
  */
 
-@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = BernaApiApplication.class)
+@WebAppConfiguration
 public class ActivemqTest {
 
     @Autowired
@@ -23,7 +25,13 @@ public class ActivemqTest {
 
     @Test
     public void testActivemq() {
-        producer.sendMessage("look this is a message==zycc==");
+        producer.sendMessage("张弓-张弓-张弓");
+        while (true) {
+        }
+    }
+    @Test
+    public void testTopic() {
+        producer.sendTopicMessage("zhnaggggggggggggggggggggg");
         while (true) {
         }
     }

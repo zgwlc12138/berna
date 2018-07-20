@@ -1,10 +1,12 @@
 package com.wlc.berna.config;
 
 import javax.jms.Queue;
+import javax.jms.Topic;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.RedeliveryPolicy;
 import org.apache.activemq.command.ActiveMQQueue;
+import org.apache.activemq.command.ActiveMQTopic;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +25,11 @@ public class ActiveMQ4Config {
 
     @Bean
     public Queue queue() {
-        return new ActiveMQQueue("queue1");
+        return new ActiveMQQueue("sample.queue");
+    }
+    @Bean
+    public Topic topic(){
+        return new ActiveMQTopic("sample.topic");
     }
 
     @Bean
@@ -46,21 +52,18 @@ public class ActiveMQ4Config {
 
     @Bean
     public ActiveMQConnectionFactory activeMQConnectionFactory(@Value("${activemq.url}") String url, RedeliveryPolicy redeliveryPolicy) {
-        ActiveMQConnectionFactory activeMQConnectionFactory =
-                new ActiveMQConnectionFactory(
-                        "admin",
-                        "admin",
-                        url);
+        ActiveMQConnectionFactory activeMQConnectionFactory =new ActiveMQConnectionFactory("admin", "admin",url);
         activeMQConnectionFactory.setRedeliveryPolicy(redeliveryPolicy);
         return activeMQConnectionFactory;
     }
 
     @Bean
-    public JmsTemplate jmsTemplate(ActiveMQConnectionFactory activeMQConnectionFactory, Queue queue) {
+    public JmsTemplate jmsTemplate(ActiveMQConnectionFactory activeMQConnectionFactory, Queue queue,Topic topic) {
         JmsTemplate jmsTemplate = new JmsTemplate();
         jmsTemplate.setDeliveryMode(2);//进行持久化配置 1表示非持久化，2表示持久化
         jmsTemplate.setConnectionFactory(activeMQConnectionFactory);
         jmsTemplate.setDefaultDestination(queue); //此处可不设置默认，在发送消息时也可设置队列
+        jmsTemplate.setDefaultDestination(topic);
         jmsTemplate.setSessionAcknowledgeMode(4);//客户端签收模式
         return jmsTemplate;
     }
@@ -68,8 +71,7 @@ public class ActiveMQ4Config {
     //定义一个消息监听器连接工厂，这里定义的是点对点模式的监听器连接工厂
     @Bean(name = "jmsQueueListener")
     public DefaultJmsListenerContainerFactory jmsQueueListenerContainerFactory(ActiveMQConnectionFactory activeMQConnectionFactory) {
-        DefaultJmsListenerContainerFactory factory =
-                new DefaultJmsListenerContainerFactory();
+        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(activeMQConnectionFactory);
         //设置连接数
         factory.setConcurrency("1-10");

@@ -1,6 +1,9 @@
 package com.wlc.berna.test.activemq;
 
 import javax.jms.Destination;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Producer {
+    private final static Logger logger = LoggerFactory.getLogger(Producer.class);
 
     @Autowired
     private JmsTemplate jmsTemplate;
@@ -23,7 +27,7 @@ public class Producer {
      * @param message
      */
     public void sendMessage(Destination destination, final String message) {
-        System.out.println(jmsTemplate.getDeliveryMode());
+        logger.info(String.valueOf(jmsTemplate.getDeliveryMode()));
         jmsTemplate.convertAndSend(destination, message);
     }
 
@@ -33,8 +37,12 @@ public class Producer {
      * @param message
      */
     public void sendMessage(final String message) {
-        System.out.println(jmsTemplate.getDeliveryMode());
-        jmsTemplate.convertAndSend("queue1", message);
+        logger.info(String.valueOf(jmsTemplate.getDeliveryMode()));
+        jmsTemplate.convertAndSend("sample.queue", message);
+    }
+    public void sendTopicMessage(final String message) {
+        logger.info(String.valueOf(jmsTemplate.getDeliveryMode()));
+        jmsTemplate.convertAndSend("sample.topic", message);
     }
 }
 
