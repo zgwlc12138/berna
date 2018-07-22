@@ -1,11 +1,13 @@
-package com.wlc.berna.controller;
+package com.wlc.berna.web.controller;
 
-import com.wlc.berna.service.CityService;
-import com.wlc.berna.vo.City;
+
+import com.wlc.berna.web.service.CityService;
+import com.wlc.berna.web.vo.City;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 @RestController
 @RequestMapping(value = "/test")
 public class TestController {

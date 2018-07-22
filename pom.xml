@@ -12,6 +12,7 @@
         <module>berna-api</module>
         <module>berna-core</module>
         <module>berna-web</module>
+        <module>berna-algorithm</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

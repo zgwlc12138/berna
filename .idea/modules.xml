@@ -3,10 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/berna.iml" filepath="$PROJECT_DIR$/.idea/berna.iml" />
-      <module fileurl="file://$PROJECT_DIR$/berna-api/berna-api.iml" filepath="$PROJECT_DIR$/berna-api/berna-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/berna-algorithm/berna-algorithm.iml" filepath="$PROJECT_DIR$/berna-algorithm/berna-algorithm.iml" />
       <module fileurl="file://$PROJECT_DIR$/berna-api/berna-api.iml" filepath="$PROJECT_DIR$/berna-api/berna-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/berna-core/berna-core.iml" filepath="$PROJECT_DIR$/berna-core/berna-core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/berna-web/berna-web.iml" filepath="$PROJECT_DIR$/berna-web/berna-web.iml" />
       <module fileurl="file://$PROJECT_DIR$/berna-web/berna-web.iml" filepath="$PROJECT_DIR$/berna-web/berna-web.iml" />
     </modules>
   </component>

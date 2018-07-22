@@ -1,7 +1,8 @@
-package com.wlc.berna.service.impl;
+package com.wlc.berna.web.service.impl;
 
-import com.wlc.berna.service.CityService;
-import com.wlc.berna.vo.City;
+
+import com.wlc.berna.web.service.CityService;
+import com.wlc.berna.web.vo.City;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class CityServiceImpl implements CityService {
 
     // 模拟数据库，存储 City 信息
     private static Map<Long, City> CITY_DB = new HashMap<>();
-    public  CityServiceImpl(){
+    public CityServiceImpl(){
         for (int i=0;i<100;i++){
             City city=new City();
             city.setId(Long.valueOf(i));

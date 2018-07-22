@@ -1,6 +1,7 @@
-package com.wlc.berna.service;
+package com.wlc.berna.web.service;
 
-import com.wlc.berna.vo.City;
+
+import com.wlc.berna.web.vo.City;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.wlc.berna.vo;
+package com.wlc.berna.web.vo;
 
 public class City {
     /**
