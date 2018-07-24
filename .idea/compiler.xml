@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="berna-algorithm" />
         <module name="berna-api" />
+        <module name="berna-common" />
         <module name="berna-core" />
         <module name="berna-web" />
       </profile>
@@ -16,6 +17,7 @@
       <module name="berna" target="1.8" />
       <module name="berna-algorithm" target="1.8" />
       <module name="berna-api" target="1.8" />
+      <module name="berna-common" target="1.8" />
       <module name="berna-core" target="1.8" />
       <module name="berna-web" target="1.8" />
     </bytecodeTargetLevel>

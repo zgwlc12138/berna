@@ -1,0 +1,30 @@
+<configuration scan="true">
+    <property name="FILE_PATH" value="D:/logs" />
+    <property name="FILE_NAME" value="berna-api" />
+    <property name="MaxSize" value="10mb" />
+    <!-- support kb、mb、gb  -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyyMMdd HH:mm:ss SSS}[%thread %X][%level][%file : %line]-%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${FILE_PATH}/${FILE_NAME}.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${USER_HOME}/${APP_NAME}/${FILE_NAME}-%d{yyyyMMdd}.log</FileNamePattern>
+            <MaxHistory>180</MaxHistory>
+            <!--             <TimeBasedFileNamingAndTriggeringPolicy	class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP"> -->
+            <!-- 				<MaxFileSize>${MaxSize}</MaxFileSize> -->
+            <!-- 			</TimeBasedFileNamingAndTriggeringPolicy> -->
+        </rollingPolicy>
+        <layout>
+            <Pattern>%d{yyyyMMdd HH:mm:ss SSS}[%thread %X][%level][%file : %line]-%msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>

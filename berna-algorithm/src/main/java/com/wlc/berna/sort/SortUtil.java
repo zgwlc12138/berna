@@ -110,7 +110,7 @@ public class SortUtil {
 
         int[] nums = { 2, 7, 8, 3, 1, 6, 9, 0, 5, 4 };
         // 归并排序的实现
-       // SortUtil.mergeSort(nums, 0, nums.length-1);
+        // SortUtil.mergeSort(nums, 0, nums.length-1);
         SortUtil.insertionSort(nums);
         System.out.println(Arrays.toString(nums));
     }
