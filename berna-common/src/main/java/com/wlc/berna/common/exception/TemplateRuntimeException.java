@@ -88,7 +88,7 @@ public class TemplateRuntimeException extends RuntimeException implements Messag
 	public void setDefaultMessage(String message) {
 		this.msgSupport.setDefaultMessage(message);
 	}
-
+	@Override
 	public String getDefaultMessage() {
 		String result = this.msgSupport.getDefaultMessage();
 		if (result == null) {
@@ -113,7 +113,7 @@ public class TemplateRuntimeException extends RuntimeException implements Messag
 
 		return result;
 	}
-
+	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer(super.toString());
 		if (this.msgSupport.getArgs() != null) {
@@ -130,7 +130,7 @@ public class TemplateRuntimeException extends RuntimeException implements Messag
 	public String getMessageKey() {
 		return this.msgSupport.getMessageKey();
 	}
-
+	@Override
 	public Object[] getArgs() {
 		return this.msgSupport.getArgs();
 	}
@@ -140,7 +140,7 @@ public class TemplateRuntimeException extends RuntimeException implements Messag
 
 		this.msgSupport.setArgs(args);
 	}
-
+	@Override
 	public String getMessage() {
 		if (getCause() == null) {
 			if (this.args == null) {

@@ -10,6 +10,12 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.concurrent.*;
 
+/**
+ * @Author: zhanggong
+ * @Description:
+ * @Date: Create in 10:24 2018/7/25
+ * @Modified by:
+ */
 @Component("pooledExecutor")
 public class PooledExecutor implements Executor, Snapshot {
     private Log log = LogFactory.getLog(PooledExecutor.class);
@@ -22,15 +28,10 @@ public class PooledExecutor implements Executor, Snapshot {
 
     private String name = "berna-thread-pool";
 
-    @Value("${thread.queueSize}")
     private int queueSize = DEFAULT_QUEUESIZE;
-    @Value("${thread.minSize}")
     private int minSize = DEFAULT_MINSIZE;
-    @Value("${thread.maxSize}")
     private int maxSize = DEFAULT_MAXSIZE;
-    @Value("${thread.initSize}")
     private int initSize = DEFAULT_INITSIZE;
-    @Value("${thread.keepAliveTime}")
     private int keepAliveTime = DEFAULT_KEEPALIVETIME;
     private String blockedExecutionPolicy = "run";
     ThreadPoolExecutor executor;
@@ -46,46 +47,46 @@ public class PooledExecutor implements Executor, Snapshot {
             this.notifiers.addAll(sns);
         }
     }
-
+    @Override
     public void registerSnapshotNotifier(SnapshotNotifier notifier) {
         synchronized (this.notifiers) {
             this.notifiers.add(notifier);
         }
     }
-
+    @Override
     public void unregisterSnapshotNotifier(SnapshotNotifier notifier) {
         synchronized (this.notifiers) {
             this.notifiers.remove(notifier);
         }
     }
-
+    @Override
     public String getSnapshotName() {
         StringBuffer buf = new StringBuffer();
         buf.append(this.name).append("|")
                 .append(Integer.toHexString(super.hashCode()));
         return buf.toString();
     }
-
+    @Override
     public String getSnapshotType() {
         return "ThreadPool";
     }
-
+    @Override
     public void setOpenSnapshot(boolean open) {
         this.openProfiler = open;
     }
-
+    @Override
     public boolean isOpenSnapshot() {
         return this.openProfiler;
     }
-
+    @Override
     public void setMonitor(boolean monitorFlag) {
         this.monitorFlag = monitorFlag;
     }
-
+    @Override
     public boolean isMonitor() {
         return this.monitorFlag;
     }
-
+    @Override
     public void setName(String string) {
         this.name = string;
     }
@@ -113,7 +114,7 @@ public class PooledExecutor implements Executor, Snapshot {
     public void setQueueSize(int i) {
         this.queueSize = i;
     }
-
+    @Override
     public synchronized void start() {
         if (this.started) {
             return;
@@ -121,13 +122,15 @@ public class PooledExecutor implements Executor, Snapshot {
         this.started = true;
 
         BlockingQueue queue = null;
-        if (this.queueSize > 0)
+        if (this.queueSize > 0) {
             queue = new ArrayBlockingQueue(this.queueSize);
+        }
         else {
             queue = new SynchronousQueue();
         }
 
         ThreadFactory tf = new ThreadFactory() {
+            @Override
             public Thread newThread(Runnable run) {
                 return new Thread(run, ((PooledExecutor.this.name == null)
                         ? "pooled"
@@ -138,12 +141,14 @@ public class PooledExecutor implements Executor, Snapshot {
         };
         RejectedExecutionHandler handler = null;
         if (this.blockedExecutionPolicy.length() > 0) {
-            if ("run".equals(this.blockedExecutionPolicy))
+            if ("run".equals(this.blockedExecutionPolicy)){
                 handler = new ThreadPoolExecutor.CallerRunsPolicy();
-            else if ("abort".equals(this.blockedExecutionPolicy))
+            }
+            else if ("abort".equals(this.blockedExecutionPolicy)) {
                 handler = new ThreadPoolExecutor.AbortPolicy();
-            else if ("discard".equals(this.blockedExecutionPolicy))
-                handler = new ThreadPoolExecutor.DiscardPolicy();
+            }
+            else if ("discard".equals(this.blockedExecutionPolicy)){
+                handler = new ThreadPoolExecutor.DiscardPolicy();}
             else if ("discardOldest".equals(this.blockedExecutionPolicy)) {
                 handler = new ThreadPoolExecutor.DiscardOldestPolicy();
             }
@@ -153,18 +158,18 @@ public class PooledExecutor implements Executor, Snapshot {
 
         this.log.info("Initialize " + this);
     }
-
+    @Override
     public synchronized void shutdown() throws InterruptedException {
         if (this.executor != null) {
             this.executor.shutdownNow();
         }
         this.started = false;
     }
-
+    @Override
     public boolean isAlive() {
         return this.started;
     }
-
+    @Override
     public void execute(Runnable runnable) throws InterruptedException {
         if (this.executor == null) {
             start();
@@ -172,16 +177,18 @@ public class PooledExecutor implements Executor, Snapshot {
 
         this.executor.execute(new InnerRunnable(runnable));
 
-        if (!(this.openProfiler))
+        if (!(this.openProfiler)) {
             return;
+        }
         List<SnapshotNotifier> copied;
         synchronized (this.notifiers) {
             copied = new ArrayList(this.notifiers);
         }
-        for (SnapshotNotifier notifier : copied)
+        for (SnapshotNotifier notifier : copied){
             notifier.notify(this);
+        }
     }
-
+    @Override
     public Map getSnapshotData() {
         if (this.executor == null) {
             return null;
@@ -213,12 +220,15 @@ public class PooledExecutor implements Executor, Snapshot {
 
         for (Map.Entry<InnerRunnable,Long> entry : map.entrySet()) {
             long runningTime = now - ((Long) entry.getValue()).longValue();
-            if (runningTime < 5000L)
+            if (runningTime < 5000L){
                 ++count0;
-            else if ((runningTime >= 5000L) && (runningTime < 10000L))
+            }
+            else if ((runningTime >= 5000L) && (runningTime < 10000L)){
                 ++count5;
-            else if ((runningTime >= 10000L) && (runningTime < 20000L))
+            }
+            else if ((runningTime >= 10000L) && (runningTime < 20000L)){
                 ++count10;
+            }
             else if (runningTime >= 20000L) {
                 ++countMax;
             }
@@ -231,7 +241,7 @@ public class PooledExecutor implements Executor, Snapshot {
 
         return result;
     }
-
+@Override
     public String toString() {
         return ((this.name == null) ? "threadpool" : this.name) + "[queue="
                 + this.queueSize + ",init=" + this.initSize + ",min="
@@ -250,7 +260,7 @@ public class PooledExecutor implements Executor, Snapshot {
         public Thread getThread() {
             return this.thread;
         }
-
+        @Override
         public void run() {
             this.thread = Thread.currentThread();
             PooledExecutor.this.runnableMap.put(this,
