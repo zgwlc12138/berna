@@ -31,6 +31,12 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>1.1.9</version>
         </dependency>
+        <!-- sharding分库分表 -->
+        <dependency>
+            <groupId>com.dangdang</groupId>
+            <artifactId>sharding-jdbc-core</artifactId>
+            <version>1.5.4.1</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -36,4 +36,11 @@ public class MethodMapping {
     public void setMethod(Method method) {
         this.method = method;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb=new StringBuilder();
+        sb.append("Path: ").append(requestPath).append(",").append("Bean: ").append(actionBean.getClass().getName()).append(",").append("Method: ").append(method.getName());
+        return sb.toString();
+    }
 }

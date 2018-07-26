@@ -2,6 +2,7 @@ package com.wlc.berna.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.wlc.berna.common.exception.TemplateRuntimeException;
 import com.wlc.berna.common.thread.Executor;
 import com.wlc.berna.http.HttpDispatcher;
 import com.wlc.berna.model.bo.HttpResult;
@@ -84,14 +85,14 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
     }
     private static class ChannelReadScan implements Runnable {
         @Override
-        public void run() {
+        public void run(){
+            execute();
+        }
+        public void execute(){
             try {
                 while (true) {
                     final QueueBean queueBean = queue.take();
                     httpPooledExecutor.execute(()->{
-                        String errorType = "";
-                        String errorMsg = "";
-                        long startTime = System.currentTimeMillis();
                         HttpResult httpResult = new HttpResult();
                         ChannelHandlerContext ctx = queueBean.getCtx();
                         boolean keepAlive = false;
@@ -105,7 +106,6 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
                                     ctx.write(new DefaultFullHttpResponse(HTTP_1_1, HttpResponseStatus.CONTINUE));
                                 }
                                 keepAlive = HttpHeaders.isKeepAlive(req);
-
                                 // 解析http头部
                                 for (Map.Entry<String, String> h : req.headers()) {
                                     logger.debug("HEADER: " + h.getKey() + " = " + h.getValue());
@@ -132,22 +132,24 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
                                     }
                                 }
                                 String requestPath = uri.trim().split("\\?")[0];
+                                logger.info("Request DATA: {},Request Path: {}",params,requestPath);
                                 Object data = service(requestPath, params);
                                 httpResult.setData(data);
                                 httpResult.setMsg("OK");
                             }
                         } catch (Exception e) {
-                            if (e instanceof MyBatisSystemException || e instanceof SQLSyntaxErrorException) {
-                                errorType = "数据库查询异常";
+                            if (e instanceof TemplateRuntimeException){
+                                httpResult.setErrCode(Integer.valueOf(((TemplateRuntimeException)e).getErrorCode()));
+                                httpResult.setMsg(((TemplateRuntimeException)e).getMessageKey());
+                            }else{
+                                httpResult.setErrCode(-1);
+                                httpResult.setMsg("系统异常!" + ((InvocationTargetException) e).getTargetException().getMessage() + ":" + e.getMessage());
                             }
-                            errorMsg = e.getMessage();
                             e.printStackTrace();
-                            httpResult.setErrCode(-1);
-                            System.out.println(e.getMessage());
-                            httpResult.setMsg("系统异常!" + ((InvocationTargetException) e).getTargetException().getMessage() + ":" + e.getMessage());
                             String requestPath = uri.trim().split("\\?")[0].replaceAll("/", ".");
                             logger.error(String.format("系统异常，异常方法名:%s,异常信息:%s,堆栈", requestPath, ((InvocationTargetException) e).getTargetException().getMessage() + ":" + e.getMessage()), e);
                         } finally {
+                            logger.info("Response DATA: {}",JSON.toJSONString(httpResult));
                             FullHttpResponse response;
                             try {
                                 if (httpResult.getData().equals("OK")) {

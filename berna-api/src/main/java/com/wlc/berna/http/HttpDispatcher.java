@@ -7,6 +7,8 @@ import com.wlc.berna.common.context.ContextImpl;
 import com.wlc.berna.common.exception.TemplateRuntimeException;
 import com.wlc.berna.model.bo.MethodMapping;
 import com.wlc.berna.util.SpringContextUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -19,8 +21,8 @@ import java.util.Map;
  * @Modified by:
  */
 public class HttpDispatcher {
+    private final static Logger logger= LoggerFactory.getLogger(HttpDispatcher.class);
     public static final Map<String,MethodMapping> METHOD_MAPPING_MAP=new HashMap<>();
-
     /**
      * 服务执行
      * @param requestPath
@@ -37,7 +39,7 @@ public class HttpDispatcher {
             return methodMapping.getMethod().invoke(methodMapping.getActionBean(), context);
         }
         //找不到方法
-        throw new TemplateRuntimeException(String.format("找不到方法,requestPath=",requestPath),"404");
+        throw new TemplateRuntimeException(String.format("找不到方法,requestPath=%s",requestPath),"404");
     }
 
     public static void init() {
@@ -46,7 +48,7 @@ public class HttpDispatcher {
             // 获取并遍历该 Action 类中所有的方法
             Object actionBean = entry.getValue();
             Method[] actionMethods = actionBean.getClass().getDeclaredMethods();
-            String basePath = "";
+            String basePath = actionBean.getClass().getAnnotation(Action.class).value();
             if (actionBean.getClass().isAnnotationPresent(RequestMapping.class)) {
                 basePath = actionBean.getClass().getAnnotation(RequestMapping.class).value();
             }
@@ -67,7 +69,9 @@ public class HttpDispatcher {
                     otherPath=sb.append("/").append(otherPath).toString();
                 }
                 String requestPath = basePath +otherPath;
+                methodMapping.setRequestPath(requestPath);
                 METHOD_MAPPING_MAP.put(requestPath, methodMapping);
+                logger.info("Action Request Mapping: {}",methodMapping.toString());
             }
         }
     }
