@@ -22,12 +22,12 @@ public class BeanUtils
     } else if(value instanceof String && StringUtils.isBlank((String)value)){
       return null;
     } else{
-      return (T) BeanUtils.convert(value, clazz);
+      return (T) BeanUtils.Object2Object(value, clazz);
     }
   }
 
   public static <T> T convert(Map<String,Object> params,String key, Class<T> clazz) {
-    return BeanUtils.convert(params.get(key), clazz);
+    return BeanUtils.Object2Object(params.get(key), clazz);
   }
 
   public static <T> T  Object2Object(Object value, Class<T> clazz) {

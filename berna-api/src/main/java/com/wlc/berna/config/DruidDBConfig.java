@@ -25,17 +25,7 @@ import java.sql.SQLException;
 public class DruidDBConfig {
     private Logger logger = LoggerFactory.getLogger(DruidDBConfig.class);
 
-    @Value("${spring.datasource.url}")
-    private String dbUrl;
 
-    @Value("${spring.datasource.username}")
-    private String username;
-
-    @Value("${spring.datasource.password}")
-    private String password;
-
-    @Value("${spring.datasource.driverClassName}")
-    private String driverClassName;
 
     @Value("${spring.datasource.initialSize}")
     private int initialSize;
@@ -84,10 +74,6 @@ public class DruidDBConfig {
     public DataSource dataSource() {
         DruidDataSource datasource = new DruidDataSource();
 
-        datasource.setUrl(this.dbUrl);
-        datasource.setUsername(username);
-        datasource.setPassword(password);
-        datasource.setDriverClassName(driverClassName);
 
         // configuration
         datasource.setInitialSize(initialSize);

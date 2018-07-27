@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wlc.berna.core.mapper.PowerImgInfMapper">
+  <resultMap id="BaseResultMap" type="com.wlc.berna.core.domain.PowerImgInfDO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="img_index" jdbcType="INTEGER" property="imgIndex" />
+    <result column="img_type" jdbcType="VARCHAR" property="imgType" />
+    <result column="master_path" jdbcType="VARCHAR" property="masterPath" />
+    <result column="remarks1" jdbcType="VARCHAR" property="remarks1" />
+    <result column="remarks2" jdbcType="VARCHAR" property="remarks2" />
+    <result column="remarks3" jdbcType="VARCHAR" property="remarks3" />
+    <result column="slave_path" jdbcType="VARCHAR" property="slavePath" />
+    <result column="x_distance" jdbcType="INTEGER" property="xDistance" />
+    <result column="y_distance" jdbcType="INTEGER" property="yDistance" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, img_index, img_type, master_path, remarks1, remarks2, remarks3, slave_path, x_distance, 
+    y_distance
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_power_img_inf
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tbl_power_img_inf
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wlc.berna.core.domain.PowerImgInfDO">
+    insert into tbl_power_img_inf (id, img_index, img_type, 
+      master_path, remarks1, remarks2, 
+      remarks3, slave_path, x_distance, 
+      y_distance)
+    values (#{id,jdbcType=INTEGER}, #{imgIndex,jdbcType=INTEGER}, #{imgType,jdbcType=VARCHAR}, 
+      #{masterPath,jdbcType=VARCHAR}, #{remarks1,jdbcType=VARCHAR}, #{remarks2,jdbcType=VARCHAR}, 
+      #{remarks3,jdbcType=VARCHAR}, #{slavePath,jdbcType=VARCHAR}, #{xDistance,jdbcType=INTEGER}, 
+      #{yDistance,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wlc.berna.core.domain.PowerImgInfDO">
+    insert into tbl_power_img_inf
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="imgIndex != null">
+        img_index,
+      </if>
+      <if test="imgType != null">
+        img_type,
+      </if>
+      <if test="masterPath != null">
+        master_path,
+      </if>
+      <if test="remarks1 != null">
+        remarks1,
+      </if>
+      <if test="remarks2 != null">
+        remarks2,
+      </if>
+      <if test="remarks3 != null">
+        remarks3,
+      </if>
+      <if test="slavePath != null">
+        slave_path,
+      </if>
+      <if test="xDistance != null">
+        x_distance,
+      </if>
+      <if test="yDistance != null">
+        y_distance,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="imgIndex != null">
+        #{imgIndex,jdbcType=INTEGER},
+      </if>
+      <if test="imgType != null">
+        #{imgType,jdbcType=VARCHAR},
+      </if>
+      <if test="masterPath != null">
+        #{masterPath,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks1 != null">
+        #{remarks1,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks2 != null">
+        #{remarks2,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks3 != null">
+        #{remarks3,jdbcType=VARCHAR},
+      </if>
+      <if test="slavePath != null">
+        #{slavePath,jdbcType=VARCHAR},
+      </if>
+      <if test="xDistance != null">
+        #{xDistance,jdbcType=INTEGER},
+      </if>
+      <if test="yDistance != null">
+        #{yDistance,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wlc.berna.core.domain.PowerImgInfDO">
+    update tbl_power_img_inf
+    <set>
+      <if test="imgIndex != null">
+        img_index = #{imgIndex,jdbcType=INTEGER},
+      </if>
+      <if test="imgType != null">
+        img_type = #{imgType,jdbcType=VARCHAR},
+      </if>
+      <if test="masterPath != null">
+        master_path = #{masterPath,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks1 != null">
+        remarks1 = #{remarks1,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks2 != null">
+        remarks2 = #{remarks2,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks3 != null">
+        remarks3 = #{remarks3,jdbcType=VARCHAR},
+      </if>
+      <if test="slavePath != null">
+        slave_path = #{slavePath,jdbcType=VARCHAR},
+      </if>
+      <if test="xDistance != null">
+        x_distance = #{xDistance,jdbcType=INTEGER},
+      </if>
+      <if test="yDistance != null">
+        y_distance = #{yDistance,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wlc.berna.core.domain.PowerImgInfDO">
+    update tbl_power_img_inf
+    set img_index = #{imgIndex,jdbcType=INTEGER},
+      img_type = #{imgType,jdbcType=VARCHAR},
+      master_path = #{masterPath,jdbcType=VARCHAR},
+      remarks1 = #{remarks1,jdbcType=VARCHAR},
+      remarks2 = #{remarks2,jdbcType=VARCHAR},
+      remarks3 = #{remarks3,jdbcType=VARCHAR},
+      slave_path = #{slavePath,jdbcType=VARCHAR},
+      x_distance = #{xDistance,jdbcType=INTEGER},
+      y_distance = #{yDistance,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getRandomInf" resultMap="BaseResultMap">
+    SELECT * FROM tbl_power_img_inf AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM tbl_power_img_inf)-(SELECT MIN(id) FROM tbl_power_img_inf))+(SELECT MIN(id) FROM tbl_power_img_inf)) AS id) AS t2 WHERE t1.id >= t2.id ORDER BY t1.id LIMIT 1
+  </select>
+  <select id="findAllRandomInf" resultMap="BaseResultMap">
+    SELECT * FROM tbl_power_img_inf
+  </select>
+</mapper>

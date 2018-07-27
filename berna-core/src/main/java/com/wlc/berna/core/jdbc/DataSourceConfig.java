@@ -80,12 +80,12 @@ public class DataSourceConfig {
      * @param dataSourceRule
      * @return
      */
-    @Bean
+    @Bean(name = "shardingRule")
     public ShardingRule shardingRule(DataSourceRule dataSourceRule) {
         //具体分库分表策略
-        TableRule orderTableRule = TableRule.builder("t_order")
-                .actualTables(Arrays.asList("t_order_0", "t_order_1"))
-                .tableShardingStrategy(new TableShardingStrategy("order_id", new ModuloTableShardingAlgorithm()))
+        TableRule orderTableRule = TableRule.builder("sample_log")
+                .actualTables(Arrays.asList("sample_log_0", "sample_log_1"))
+                .tableShardingStrategy(new TableShardingStrategy("sample_id", new ModuloTableShardingAlgorithm()))
                 .dataSourceRule(dataSourceRule)
                 .build();
 
@@ -93,14 +93,14 @@ public class DataSourceConfig {
 
 
         //绑定表策略，在查询时会使用主表策略计算路由的数据源，因此需要约定绑定表策略的表的规则需要一致，可以一定程度提高效率
-        List<BindingTableRule> bindingTableRules = new ArrayList<BindingTableRule>();
+        List<BindingTableRule> bindingTableRules = new ArrayList<>();
         bindingTableRules.add(new BindingTableRule(Arrays.asList(orderTableRule)));
         return ShardingRule.builder()
                 .dataSourceRule(dataSourceRule)
                 .tableRules(Arrays.asList(orderTableRule))
                 .bindingTableRules(bindingTableRules)
-                .databaseShardingStrategy(new DatabaseShardingStrategy("user_id", new ModuloDatabaseShardingAlgorithm()))
-                .tableShardingStrategy(new TableShardingStrategy("order_id", new ModuloTableShardingAlgorithm()))
+                .databaseShardingStrategy(new DatabaseShardingStrategy("user_unicode", new ModuloDatabaseShardingAlgorithm()))
+                .tableShardingStrategy(new TableShardingStrategy("sample_id", new ModuloTableShardingAlgorithm()))
                 .build();
     }
 
@@ -112,7 +112,7 @@ public class DataSourceConfig {
      * @throws SQLException
      */
     @Bean(name = "dataSource")
-    public DataSource shardingDataSource(ShardingRule shardingRule) throws SQLException {
+    public DataSource shardingDataSource(@Qualifier("shardingRule")ShardingRule shardingRule) throws SQLException {
         return ShardingDataSourceFactory.createDataSource(shardingRule);
     }
 
