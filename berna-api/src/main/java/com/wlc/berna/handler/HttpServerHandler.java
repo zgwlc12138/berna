@@ -1,7 +1,6 @@
 package com.wlc.berna.handler;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.wlc.berna.common.exception.TemplateRuntimeException;
 import com.wlc.berna.common.thread.Executor;
 import com.wlc.berna.http.HttpDispatcher;
@@ -16,14 +15,12 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.mybatis.spring.MyBatisSystemException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
-import java.sql.SQLSyntaxErrorException;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;

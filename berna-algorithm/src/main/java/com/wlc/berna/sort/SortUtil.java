@@ -29,8 +29,10 @@ public class SortUtil {
 
     private static void merge(int[] nums, int low, int mid, int high) {
         int[] temp = new int[high - low + 1];
-        int i = low;// 左指针
-        int j = mid + 1;// 右指针
+        // 左指针
+        int i = low;
+        // 右指针
+        int j = mid + 1;
         int k = 0;
         // 把较小的数先移到新数组中
         while (i <= mid && j <= high) {
