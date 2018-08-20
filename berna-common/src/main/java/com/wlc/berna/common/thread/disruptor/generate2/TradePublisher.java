@@ -3,14 +3,14 @@ package com.wlc.berna.common.thread.disruptor.generate2;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
-import bhz.generate1.Trade;
 
 import com.lmax.disruptor.EventTranslator;
 import com.lmax.disruptor.dsl.Disruptor;
+import com.wlc.berna.common.thread.disruptor.generate1.Trade;
 
 public class TradePublisher implements Runnable {  
 	
-    Disruptor<Trade> disruptor;  
+    Disruptor<Trade> disruptor;
     private CountDownLatch latch;  
     
     private static int LOOP=10;//模拟百万次交易的发生  
