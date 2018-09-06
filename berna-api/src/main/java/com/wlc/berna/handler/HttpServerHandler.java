@@ -2,9 +2,9 @@ package com.wlc.berna.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.wlc.berna.common.exception.TemplateRuntimeException;
+import com.wlc.berna.common.response.BaseResponse;
 import com.wlc.berna.common.thread.Executor;
 import com.wlc.berna.http.HttpDispatcher;
-import com.wlc.berna.model.bo.HttpResult;
 import com.wlc.berna.util.BeanUtils;
 import com.wlc.berna.util.SpringContextUtil;
 import io.netty.buffer.ByteBuf;
@@ -90,7 +90,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
                 while (true) {
                     final QueueBean queueBean = queue.take();
                     httpPooledExecutor.execute(()->{
-                        HttpResult httpResult = new HttpResult();
+                        BaseResponse baseResponse=new BaseResponse();
                         ChannelHandlerContext ctx = queueBean.getCtx();
                         boolean keepAlive = false;
                         Map<String, Object> params = new HashMap<>(1);
@@ -130,30 +130,22 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
                                 }
                                 String requestPath = uri.trim().split("\\?")[0];
                                 logger.info("Request DATA: {},Request Path: {}",params,requestPath);
-                                Object data = service(requestPath, params);
-                                httpResult.setData(data);
-                                httpResult.setMsg("OK");
+                                baseResponse = (BaseResponse) service(requestPath, params);
                             }
                         } catch (Exception e) {
                             if (e instanceof TemplateRuntimeException){
-                                httpResult.setErrCode(Integer.valueOf(((TemplateRuntimeException)e).getErrorCode()));
-                                httpResult.setMsg(((TemplateRuntimeException)e).getMessageKey());
+                                baseResponse.markError(Integer.valueOf(((TemplateRuntimeException)e).getErrorCode()),null,((TemplateRuntimeException)e).getMessageKey());
                             }else{
-                                httpResult.setErrCode(-1);
-                                httpResult.setMsg("系统异常!" + ((InvocationTargetException) e).getTargetException().getMessage() + ":" + e.getMessage());
+                                baseResponse.markError(-1,null,"系统异常!" + ((InvocationTargetException) e).getTargetException().getMessage() + ":" + e.getMessage());
                             }
                             e.printStackTrace();
                             String requestPath = uri.trim().split("\\?")[0].replaceAll("/", ".");
                             logger.error(String.format("系统异常，异常方法名:%s,异常信息:%s,堆栈", requestPath, ((InvocationTargetException) e).getTargetException().getMessage() + ":" + e.getMessage()), e);
                         } finally {
-                            logger.info("Response DATA: {}",JSON.toJSONString(httpResult));
+                            logger.info("Response DATA: {}",JSON.toJSONString(baseResponse));
                             FullHttpResponse response;
                             try {
-                                if (httpResult.getData().equals("OK")) {
-                                    response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer("OK".getBytes("UTF-8")));
-                                } else {
-                                    response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(JSON.toJSONString(httpResult).getBytes("UTF-8")));
-                                }
+                                response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(JSON.toJSONString(baseResponse).getBytes("UTF-8")));
                                 response.headers().set(CONTENT_TYPE, "application/json;charset=UTF-8");
                                 response.headers().set(CONTENT_LENGTH, response.content().readableBytes());
                                 if (!keepAlive) {

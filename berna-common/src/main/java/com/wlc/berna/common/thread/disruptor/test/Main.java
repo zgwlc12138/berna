@@ -5,6 +5,7 @@ import com.lmax.disruptor.dsl.ProducerType;
 
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -16,20 +17,16 @@ import java.util.concurrent.Executors;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         //创建ringBuffer
-        RingBuffer<Order> ringBuffer =
-                RingBuffer.create(ProducerType.MULTI,
-                        new EventFactory<Order>() {
-                            @Override
-                            public Order newInstance() {
-                                return new Order();
-                            }
-                        },
-                        1024*1024,
-                        new YieldingWaitStrategy());
+        RingBuffer<Order> ringBuffer = RingBuffer.create(ProducerType.MULTI,new EventFactory<Order>() {
+            @Override public Order newInstance() {
+                return new Order(); }
+                },
+                1024*1024,
+                new YieldingWaitStrategy());
 
         SequenceBarrier barrier = ringBuffer.newBarrier();
 
-        Consumer[] consumers = new Consumer[3];
+        Consumer[] consumers = new Consumer[10];
         for(int i=0;i<consumers.length;i++){
             consumers[i]=new Consumer("c"+i);
         }
@@ -40,10 +37,11 @@ public class Main {
                         new IntEventExceptionHandler(),
                         consumers);
         ringBuffer.addGatingSequences(workerPool.getWorkerSequences());
-        workerPool.start(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
+        ExecutorService executorService=Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        workerPool.start(executorService);
 
         final CountDownLatch latch = new CountDownLatch(1);
-        for(int i=0;i<100;i++){
+        for(int i=0;i<10000;i++){
             final Producer p = new Producer(ringBuffer);
             new Thread(new Runnable(){
                 @Override
@@ -62,7 +60,10 @@ public class Main {
         Thread.sleep(2000);
         System.out.println("------------开始生产-------------");
         latch.countDown();
-        Thread.sleep(5000);
+        Thread.sleep(10000);
+        workerPool.halt();
+        executorService.shutdown();
+        System.out.println(workerPool.isRunning());
         System.out.println("总数："+consumers[0].getCount());
 
     }

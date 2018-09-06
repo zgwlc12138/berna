@@ -1,4 +1,4 @@
-package com.wlc.berna.model.bo;
+package com.wlc.berna.common.response;
 
 
 /**
@@ -7,12 +7,12 @@ package com.wlc.berna.model.bo;
  * @Date: Create in 14:57 2018/7/25
  * @Modified by:
  */
-public class HttpResult {
+public class BaseResult {
     private int errCode = 0;
     private String msg = "";
     private Object data = new Object();
 
-    public HttpResult() {
+    public BaseResult() {
 
     }
 
