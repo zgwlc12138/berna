@@ -24,6 +24,8 @@ import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static io.netty.handler.codec.http.HttpHeaders.Names.*;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
@@ -40,7 +42,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
     private static Executor httpPooledExecutor=null;
     private static volatile BlockingQueue<QueueBean> queue = null;
     private static volatile String serverIp = null;
-    public HttpServerHandler(){
+    static{
         httpPooledExecutor= (Executor)SpringContextUtil.getBean("httpPooledExecutor");
         queue=new ArrayBlockingQueue<>(100);
     }
@@ -76,9 +78,13 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
         }
     }
     static {
-        Thread thread = new Thread(new ChannelReadScan(), "ServerChannelReadScan");
-        thread.setDaemon(true);
-        thread.start();
+        ExecutorService service= Executors.newFixedThreadPool(1);
+        try {
+            service.submit(new ChannelReadScan());
+            logger.info("netty 线程正确执行");
+        }catch (Exception e){
+            logger.error("netty 线程启动异常",e);
+        }
     }
     private static class ChannelReadScan implements Runnable {
         @Override
@@ -108,7 +114,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
                                     logger.debug("HEADER: " + h.getKey() + " = " + h.getValue());
                                 }
                                 uri = req.getUri();
-                                if (uri.endsWith("/favicon.ico")) {
+                                if (req.getUri().endsWith("/favicon.ico")) {
                                     return;
                                 }
                                 if (uri.startsWith("http")) {
@@ -140,7 +146,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
                             }
                             e.printStackTrace();
                             String requestPath = uri.trim().split("\\?")[0].replaceAll("/", ".");
-                            logger.error(String.format("系统异常，异常方法名:%s,异常信息:%s,堆栈", requestPath, ((InvocationTargetException) e).getTargetException().getMessage() + ":" + e.getMessage()), e);
+                            logger.error(String.format("系统异常，异常方法名:%s,异常信息:%s,堆栈", requestPath, e.getMessage()), e);
                         } finally {
                             logger.info("Response DATA: {}",JSON.toJSONString(baseResponse));
                             FullHttpResponse response;
@@ -163,10 +169,11 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
             } catch (Exception e) {
                 logger.error("解析Http服务异常", e);
             }
+            logger.info("netty 线程已退出");
         }
 
         private Map<String, Object> convertToMap(String uri, HttpRequest req) {
-            Map<String, Object> params = new HashMap<>(1);
+            Map<String, Object> params = new HashMap<>(16);
             String jsonStr = "";
             try {
                 // 是GET请求 参数解析
