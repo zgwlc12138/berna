@@ -345,7 +345,8 @@
                     async:false,
                     success: function(msg){
                         console.log(msg);
-                        data = eval('(' + msg + ')');
+                       // data = eval('(' + msg + ')');
+                        data=msg;
                         console.log(data.returnCode);
                         if(data.returnCode==0){
                             $('.yidun_panel-placeholder').hide();
