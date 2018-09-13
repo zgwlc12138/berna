@@ -31,6 +31,8 @@ import java.io.IOException;
 @RequestMapping("/jigsaw")
 public class JigsawController {
     private static final Logger logger=LoggerFactory.getLogger(JigsawController.class);
+    private static final String LOCK_KEY="JigsawInf:lock:";
+    private static final String KEY="JigsawInf:";
     @Autowired
     private ApiService apiService;
     @Autowired
@@ -50,20 +52,19 @@ public class JigsawController {
         response.setContentType("image/jpeg");
         ServletOutputStream out = null;
         String path;
-        logger.info("请求的SessionId:{}",request.getSession().getId());
-        while(!redisUtil.lock("JigsawInf:lock:"+request.getSession().getId())){
-            logger.info("Key:{}，已锁住","JigsawInf:lock:"+request.getSession().getId());
+        while(!redisUtil.lock(LOCK_KEY+request.getSession().getId())){
+            logger.info("Key:{}，已锁住",LOCK_KEY+request.getSession().getId());
         }
-        PowerImgInfResponse inf=(PowerImgInfResponse)redisTemplate.opsForValue().get("JigsawInf:"+request.getSession().getId());
+        PowerImgInfResponse inf=(PowerImgInfResponse)redisTemplate.opsForValue().get(KEY+request.getSession().getId());
         if (inf==null){
             inf=apiService.getRandomPowerImgInf();
-            redisTemplate.opsForValue().set("JigsawInf:"+request.getSession().getId(),inf);
+            redisTemplate.opsForValue().set(KEY+request.getSession().getId(),inf);
         }else{
-            redisTemplate.delete("JigsawInf:"+request.getSession().getId());
+            redisTemplate.delete(KEY+request.getSession().getId());
             request.getSession().setAttribute("XDistance",inf.getxDistance());
         }
-        redisUtil.unLock("JigsawInf:lock:"+request.getSession().getId());
-        logger.info("Img path1:{},path2:{}",inf.getSlavePath(),inf.getMasterPath());
+        redisUtil.unLock(LOCK_KEY+request.getSession().getId());
+        logger.info("锁已释放:{}",LOCK_KEY+request.getSession().getId());
         if ("1".equals(type)){
             path=inf.getMasterPath();
         }else{
@@ -96,7 +97,7 @@ public class JigsawController {
     }
     @ResponseBody
     @RequestMapping(value = "/validateCode",method = {RequestMethod.GET,RequestMethod.POST})
-    public String validateCode(@Param(value = "oX")String oX,HttpServletRequest request, HttpServletResponse response){
+    public String validateCode(@Param(value = "oX")String oX,HttpServletRequest request){
         JSONObject jsonObject=new JSONObject();
         if (oX==null){
             jsonObject.put("returnCode",1);
