@@ -38,7 +38,7 @@ public class HttpConsumer implements WorkHandler<RingData<HttpBean>> {
         BaseResponse baseResponse=new BaseResponse();
         ChannelHandlerContext ctx = bean.getCtx();
         boolean keepAlive = false;
-        Map<String, Object> params = new HashMap<>(1);
+        Map<String, Object> params;
         String uri = "";
         try {
             Object msg = bean.getMsg();
@@ -83,7 +83,6 @@ public class HttpConsumer implements WorkHandler<RingData<HttpBean>> {
             }else{
                 baseResponse.markError(-1,null,"系统异常!" + ((InvocationTargetException) e).getTargetException().getMessage() + ":" + e.getMessage());
             }
-            e.printStackTrace();
             String requestPath = uri.trim().split("\\?")[0].replaceAll("/", ".");
             logger.error(String.format("系统异常，异常方法名:%s,异常信息:%s,堆栈", requestPath, e.getMessage()), e);
         } finally {
@@ -124,7 +123,7 @@ public class HttpConsumer implements WorkHandler<RingData<HttpBean>> {
                 FullHttpRequest request = (FullHttpRequest) req;
                 ByteBuf jsonBuf = request.content();
                 jsonStr = jsonBuf.toString(CharsetUtil.UTF_8);
-                if (jsonStr != null && !jsonStr.equals("")) {
+                if (jsonStr != null && !"".equals(jsonStr)) {
                     params = JSON.parseObject(jsonStr, Map.class);
                 }
             }
