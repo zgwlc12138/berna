@@ -140,7 +140,7 @@ public class FontImgController {
         boolean b=false;
         List<Integer[]> serverList=(List<Integer[]>)map.get("PointList");
         if(pointList!=null&&list.size()>0){
-            b=WriteFontInImg.valiadateTextImg(serverList,ls,(Integer) map.get("Size"));
+            b=WriteFontInImg.validateTextImg(serverList,ls,(Integer) map.get("Size"));
         }
         if(b){
             return 0;

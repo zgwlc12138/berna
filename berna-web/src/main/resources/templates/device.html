@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script type="text/javascript" th:src="@{/js/jquery-1.8.3.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/fingerprint2.js}"></script>
+    <meta charset="UTF-8"/>
+    <title>设备指纹测试</title>
+</head>
+<body>
+<span>看到我就对了</span>
+<script>
+    $(document).ready(function(){
+        var finger=new Fingerprint2();
+        finger.get(function(result, components) {
+            window.localStorage.setItem('deviceCode', result)
+            console.log("设备指纹:"+result);
+            return result
+        });
+    });
+</script>
+</body>
+</html>

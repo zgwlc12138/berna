@@ -38,7 +38,7 @@ public class WriteFontInImg {
         long h2=System.currentTimeMillis();
         System.out.println("所花时间："+-(h1-h2)+"秒");
     }
-    public static boolean valiadateTextImg(List<Integer[]> serviceList,List<Integer[]> pointList,int size){
+    public static boolean validateTextImg(List<Integer[]> serviceList,List<Integer[]> pointList,int size){
         logger.info("服务器坐标：{}",JSONObject.toJSONString(serviceList));
         logger.info("客户端坐标：{}",JSONObject.toJSONString(pointList));
         for (int i=0;i<serviceList.size();i++){
@@ -53,7 +53,7 @@ public class WriteFontInImg {
         return true;
     }
     public static Map drawTextInImg(String filePath, ServletOutputStream out, String color, String textFont, int textSize, String text){
-        Map map=new HashMap(2);
+        Map map=new HashMap(4);
         List<Integer[]> pointList=new ArrayList<>();
         long h1=System.currentTimeMillis();
         ImageIcon imgIcon = new ImageIcon(filePath);
