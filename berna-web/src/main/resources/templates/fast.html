@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="applicable-device" content="pc,mobile"/>
+    <meta name="renderer" content="webkit"/>
+    <meta name="baidu-site-verification" content="We9ZpV0QoV"/>
+
+    <title>智能无感知验证码_智能验证码_验证码API_在线体验_网易云易盾</title>
+    <meta name="description" content="网易云易盾智能无感知验证码，极致用户体验，多维度收集环境信息，安全用户只需轻点即可通过验证。"/>
+    <meta name="keywords" content="智能无感知验证码,智能验证码,验证码API"/>
+
+    <link rel="shortcut icon" th:href="@{/images/fast/favicon.ico}"/>
+
+
+
+    <link rel="stylesheet" th:href="@{/css/fast/pt_layout_base.css}"/>
+
+    <link rel="stylesheet" th:href="@{/css/fast/pt_experience_base.css}"/>
+
+    <link rel="stylesheet" th:href="@{/css/fast/pt_experience_captcha_sense.css}"/>
+
+    <script>
+        var _hmt = _hmt || [];
+        var hm = document.createElement("script");
+        hm.src = "//hm.baidu.com/hm.js?4671c5d502135636b837050ec6d716ce";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    </script>
+    <script>
+        var exp = new Date();
+
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r
+            i[r] = i[r] || function () {(i[r].q = i[r].q || []).push(arguments)}, i[r].l = 1 * new Date()
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]
+            a.async = 1
+            a.src = g
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga')
+        ga('create', 'UA-81472455-1', 'auto')
+        ga('send', 'pageview')
+    </script>
+</head>
+<body>
+<header>
+    <div class="g-hd">
+    </div></header>
+<main>
+
+    <div class="g-bd">
+        <div class="g-in g-in-top">
+            <div class="g-sd2">
+            </div>
+            <div class="g-mn2">
+
+                <div class="m-tcapt">
+                    <div class="tcapt_item is-left">
+                        <div class="tcapt_wrap tcapt_wrap2">
+                            <div class="tcapt_hd">
+                                <h2 class="u-mdtitle">测试快速验证</h2>
+                                <p class="tcapt_desc">一点击过</p>
+                            </div>
+                            <div class="tcapt_content">
+                                <div class="u-fitem">
+                                    <label>用户名</label><input  type="text" value="易小盾"/>
+                                </div>
+                                <div class="u-fitem">
+                                    <label>密码</label><input  type="password" value="123456"/>
+                                </div>
+                                <div class="u-fitem u-fitem-capt">
+                                    <label>验证码</label>
+                                    <div style="width: 310px;" data-type="sense_float" class="j-captcha"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+<footer><div class="layout-footer">
+
+</div>
+</footer>
+
+<script th:src="@{/js/fast/core.js}"></script>
+<script th:src="@{/js/fast/pt_experience_captcha_sense.js}"></script>
+
+<script>
+    window.siteInfo = {
+        isLogined: 'false' === 'true',
+        loginUrl: 'https://id.163yun.com/login?referrer=https://dun.163.com/dashboard&amp;h=yd&amp;t=yd',
+        registerUrl: 'https://id.163yun.com/register?referrer=https://dun.163.com/dashboard&amp;h=yd&amp;t=yd'
+    }
+</script>
+<script th:src="@{/js/fast/t_layout_base_m0.js}"></script>
+
+
+</body>
+</html>

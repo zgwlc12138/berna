@@ -1,7 +1,10 @@
 package com.wlc.berna.web.controller;
 
+import com.wlc.berna.common.utils.NetUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,8 +31,10 @@ public class DeviceController {
      * @param request
      * @return
      */
-    public Integer receiveMsg(HttpServletRequest request){
-        
+    @RequestMapping("/receiveMsg")
+    @ResponseBody
+    public Integer receiveMsg(HttpServletRequest request,@RequestParam(value = "deviceCode") String deviceCode){
+        String ip=NetUtil.getRealIp(request);
         return 0;
     }
 }
