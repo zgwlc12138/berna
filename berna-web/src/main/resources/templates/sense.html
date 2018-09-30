@@ -78,6 +78,8 @@
 	</div>
 	<script th:src="@{/js/jquery-1.8.3.min.js}"></script>
 	<script>
+        var imgHeight=0;
+        var imgWidth=0;
 		$(document).ready(function() {
             getCode();
             function getCode() {
@@ -112,6 +114,10 @@
 			var pointList = [], x = "", y = "";
 			var clickCount = 4, pointCount = 0;
 			dom.captcha.onclick = function (e) {
+                var img=document.getElementById("captcha");
+                imgHeight=img.height;
+                imgWidth=img.width;
+
 				clickCount--;
 				pointCount++;
 
@@ -127,10 +133,10 @@
 					left: x-13+'px',
 					top: y-17+'px'
 				});
-                console.log("横"+x+"纵"+y);
+                console.log("横"+x/imgWidth+"纵"+y/imgHeight);
                 var map={
-                    "x":x,
-                    "y":y
+                    "x":x/imgWidth,
+                    "y":y/imgHeight
                 };
 				//point.push(map);
 				pointList.push(map);
@@ -178,7 +184,6 @@
                             }
 						}
 					});
-
 				}
 			};
 		});

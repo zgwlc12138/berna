@@ -59,9 +59,9 @@ public class BeanUtil {
 			{
 				String name = destDesc[i].getName();
 
-				if ((!(destBean.isWritableProperty(name))) ||
-						(!(srcBean.isReadableProperty(name))))
+				if ((!(destBean.isWritableProperty(name))) || (!(srcBean.isReadableProperty(name)))){
 					continue;
+				}
 				Object srcValue = srcBean.getPropertyValue(name);
 				if (srcValue != null) {
 					destBean.setPropertyValue(name, srcValue);
@@ -97,8 +97,9 @@ public class BeanUtil {
 	}
 
 	public static Object mapToObject(Map<String, Object> map, Class<?> beanClass) throws Exception {
-		if (map == null)
+		if (map == null){
 			return null;
+		}
 		Object obj = beanClass.newInstance();
 		BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
 		PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
@@ -115,10 +116,10 @@ public class BeanUtil {
 	}
 
 	public static Map<String, Object> objectToMap(Object obj) throws Exception {
-		if (obj == null)
+		if (obj == null){
 			return null;
-
-		Map<String, Object> map = new HashMap<String, Object>();
+		}
+		Map<String, Object> map = new HashMap<>(16);
 		BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
 		PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
 		for (PropertyDescriptor property : propertyDescriptors) {

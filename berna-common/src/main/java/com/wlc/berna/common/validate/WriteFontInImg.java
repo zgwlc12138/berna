@@ -38,7 +38,7 @@ public class WriteFontInImg {
         long h2=System.currentTimeMillis();
         System.out.println("所花时间："+-(h1-h2)+"秒");
     }
-    public static boolean validateTextImg(List<Integer[]> serviceList,List<Integer[]> pointList,int size){
+    public static boolean validateTextImg(List<Float[]> serviceList,List<Float[]> pointList,double size){
         logger.info("服务器坐标：{}",JSONObject.toJSONString(serviceList));
         logger.info("客户端坐标：{}",JSONObject.toJSONString(pointList));
         for (int i=0;i<serviceList.size();i++){
@@ -54,7 +54,7 @@ public class WriteFontInImg {
     }
     public static Map drawTextInImg(String filePath, ServletOutputStream out, String color, String textFont, int textSize, String text){
         Map map=new HashMap(4);
-        List<Integer[]> pointList=new ArrayList<>();
+        List<Float[]> pointList=new ArrayList<>();
         long h1=System.currentTimeMillis();
         ImageIcon imgIcon = new ImageIcon(filePath);
         Image img = imgIcon.getImage();
@@ -88,12 +88,12 @@ public class WriteFontInImg {
             //Rectangle2D bounds = metrics.getStringBounds(s[i], null);
             //int textWidth = (int) bounds.getWidth();
             //int textHeight = (int) bounds.getHeight();
-            int left =widthRandom.get(i).intValue();
-            int top = heightRandom.get(i).intValue();
+            float left =widthRandom.get(i).floatValue();
+            float top = heightRandom.get(i).floatValue();
             g.drawString(s[i], left, top);
-            Integer[] points=new Integer[2];
-            points[0]=left;
-            points[1]=top;
+            Float[] points=new Float[2];
+            points[0]=left/width;
+            points[1]=top/height;
             pointList.add(points);
         }
         map.put("PointList",pointList);

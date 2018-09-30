@@ -54,7 +54,7 @@ public class FontImgController {
             String code=characterService.getCode();
             request.getSession().setAttribute("FontCode",code);
             Map map=WriteFontInImg.drawTextInImg("D:\\TestImg\\end.jpg",out,"#262626","宋体",30,code);
-            map.put("Size",70);
+            map.put("Size",0.1);
             map.put("code",code);
             request.getSession().setAttribute("ValidateMap",map);
         }catch (IOException e){
@@ -129,18 +129,18 @@ public class FontImgController {
         }
         JSONObject jsonObject=JSONObject.parseObject(pointList);
         List<JSONObject> list=jsonObject.getObject("pointList",List.class);
-        List<Integer[]> ls=new ArrayList<>();
+        List<Float[]> ls=new ArrayList<>();
         list.stream().forEach(model->{
-            Integer[] arrays=new Integer[2];
-            arrays[0]=model.getObject("x",Integer.class);
-            arrays[1]=model.getObject("y",Integer.class);
+            Float[] arrays=new Float[2];
+            arrays[0]=model.getObject("x",Float.class);
+            arrays[1]=model.getObject("y",Float.class);
             ls.add(arrays);
         });
         Map map = (Map)request.getSession().getAttribute("ValidateMap");
         boolean b=false;
-        List<Integer[]> serverList=(List<Integer[]>)map.get("PointList");
+        List<Float[]> serverList=(List<Float[]>)map.get("PointList");
         if(pointList!=null&&list.size()>0){
-            b=WriteFontInImg.validateTextImg(serverList,ls,(Integer) map.get("Size"));
+            b=WriteFontInImg.validateTextImg(serverList,ls,(Double) map.get("Size"));
         }
         if(b){
             return 0;

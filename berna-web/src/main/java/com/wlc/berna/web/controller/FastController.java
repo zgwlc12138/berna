@@ -16,4 +16,8 @@ public class FastController {
     public String index(){
         return "fast";
     }
+    @RequestMapping("/test")
+    public String test(){
+        return "soon";
+    }
 }
