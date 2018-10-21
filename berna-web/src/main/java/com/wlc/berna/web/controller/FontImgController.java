@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.wlc.berna.common.exception.TemplateRuntimeException;
 import com.wlc.berna.common.validate.WriteFontInImg;
 import com.wlc.berna.web.service.CharacterService;
+import com.wlc.berna.web.utils.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,13 @@ import java.util.Map;
 @Controller
 @RequestMapping("/fontImg")
 public class FontImgController {
+    private static final String LOCK_KEY="FontImg:lock:";
+    private static final String KEY="FontImg:";
     private static final Logger logger=LoggerFactory.getLogger(FontImgController.class);
     @Autowired
     private CharacterService characterService;
-
+    @Autowired
+    private RedisUtil redisUtil;
     @RequestMapping(value = "/index",method = {RequestMethod.GET,RequestMethod.POST})
     public String index(){
         return "sense";
@@ -51,8 +55,19 @@ public class FontImgController {
         ServletOutputStream out  = null;
         try {
             out = response.getOutputStream();
-            String code=characterService.getCode();
-            request.getSession().setAttribute("FontCode",code);
+            while(!redisUtil.lock(LOCK_KEY+request.getSession().getId())){
+                logger.info("Key:{}，已锁住",LOCK_KEY+request.getSession().getId());
+            }
+            String code;
+            if (request.getSession().getAttribute("FontCode")!=null){
+                code=request.getSession().getAttribute("FontCode").toString();
+                request.getSession().removeAttribute("FontCode");
+            }else{
+                code=characterService.getCode();
+                request.getSession().setAttribute("FontCode",code);
+            }
+            redisUtil.unLock(LOCK_KEY+request.getSession().getId());
+            logger.info("锁已释放:{}",LOCK_KEY+request.getSession().getId());
             Map map=WriteFontInImg.drawTextInImg("D:\\TestImg\\end.jpg",out,"#262626","宋体",30,code);
             map.put("Size",0.1);
             map.put("code",code);
@@ -87,21 +102,19 @@ public class FontImgController {
     @RequestMapping(value = "/getFontImgChar",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     public String getFontImgChar(HttpServletRequest request){
-        String code=null;
-        boolean flag=true;
-        int count=0;
-        while(flag){
-            count++;
-            code=(String) request.getSession().getAttribute("FontCode");
-            if (code!=null){
-                flag=false;
-            }
-            if(count>50){
-                JSONObject jsonObject=new JSONObject();
-                jsonObject.put("code","");
-                return jsonObject.toJSONString();
-            }
+        while(!redisUtil.lock(LOCK_KEY+request.getSession().getId())){
+            logger.info("Key:{}，已锁住",LOCK_KEY+request.getSession().getId());
         }
+        String code;
+        if (request.getSession().getAttribute("FontCode")!=null){
+            code=request.getSession().getAttribute("FontCode").toString();
+            request.getSession().removeAttribute("FontCode");
+        }else{
+            code=characterService.getCode();
+            request.getSession().setAttribute("FontCode",code);
+        }
+        redisUtil.unLock(LOCK_KEY+request.getSession().getId());
+        logger.info("锁已释放:{}",LOCK_KEY+request.getSession().getId());
         StringBuffer bf=new StringBuffer();
         for (int i=0;i<4;i++){
             if (i!=3) {
@@ -112,7 +125,6 @@ public class FontImgController {
         }
         JSONObject jsonObject=new JSONObject();
         jsonObject.put("code","请依次点击："+bf.toString());
-        request.getSession().removeAttribute("FontCode");
         return jsonObject.toJSONString();
     }
     /**
