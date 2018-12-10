@@ -19,7 +19,7 @@ public class DisruptorService {
     private static RingBuffer<RingData<HttpBean>>  ringBuffer;
     static {
         ringBuffer = RingBuffer.create(ProducerType.MULTI,()->{
-                    return new RingData<HttpBean>();
+                    return new RingData<>();
                 },
                 1024*1024,
                 new SleepingWaitStrategy());

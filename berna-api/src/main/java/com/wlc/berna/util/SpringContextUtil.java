@@ -20,6 +20,9 @@ public class SpringContextUtil implements ApplicationContextAware {
     @Autowired
     private static ApplicationContext applicationContext = null;
 
+    public SpringContextUtil(){
+        System.out.println("kkakakakakaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    }
     public static Map<String, Object> getBeansWithAnnotation(Class<? extends Annotation> annotationType) {
         return applicationContext.getBeansWithAnnotation(annotationType);
     }
