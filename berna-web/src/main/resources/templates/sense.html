@@ -100,7 +100,7 @@
                     }
                 });
                 $("#showInfo2").text("");
-                $("#tips_text").append(data.code);
+                $("#tips_text").html(data.code);
 
             }
 			var dom = {
@@ -186,6 +186,10 @@
 					});
 				}
 			};
+            $("#refresh").click(function () {
+                document.getElementById("captcha").src="/berna-web/fontImg/getFontImg?tokenId="+Math.random();
+                getCode();
+            });
 		});
 	</script>
 </body>
