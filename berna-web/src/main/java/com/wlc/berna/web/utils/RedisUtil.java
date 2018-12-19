@@ -7,6 +7,8 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @Author: zhanggong
  * @Description: redis工具类
@@ -50,6 +52,14 @@ public class RedisUtil {
      */
     public boolean lock(String key) {
         return this.lock(key, 300);
+    }
+
+    public void setValue(String key,Object value,int seconds){
+        redisTemplate.opsForValue().set(key,value,seconds, TimeUnit.SECONDS);
+    }
+
+    public Object getValue(String key){
+        return redisTemplate.opsForValue().get(key);
     }
 
     /**

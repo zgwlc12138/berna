@@ -1,6 +1,7 @@
 package com.wlc.berna.web;
 
 import com.wlc.berna.web.service.ApolloService;
+import com.wlc.berna.web.utils.RedisUtil;
 import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import org.junit.Test;
@@ -17,6 +18,8 @@ import java.util.List;
 public class GroovyTest {
     @Autowired
     private ApolloService apolloService;
+    @Autowired
+    private RedisUtil redisUtil;
     @Test
     public void test1(){
         String groovyValue=apolloService.getConfig("groovy01",String.class);
@@ -28,10 +31,10 @@ public class GroovyTest {
         TestDemo demo=new TestDemo();
         demo.setAge(18);
         demo.setName("张弓");
-        binding.setVariable("value1",demo);
+        binding.setVariable("value1",redisUtil);
         binding.setVariable("value2","yy");
         GroovyShell shell=new GroovyShell(binding);
-        int k=(int)shell.evaluate(groovyValue);
+        String k=(String)shell.evaluate(groovyValue);
         System.out.println(k);
     }
 }
