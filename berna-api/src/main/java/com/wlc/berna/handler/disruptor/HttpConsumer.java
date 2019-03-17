@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.lmax.disruptor.WorkHandler;
 import com.wlc.berna.common.exception.TemplateRuntimeException;
 import com.wlc.berna.common.response.BaseResponse;
+import com.wlc.berna.core.service.PowerImgInfService;
 import com.wlc.berna.http.HttpDispatcher;
 import com.wlc.berna.util.BeanUtils;
+import com.wlc.berna.util.SpringContextUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
@@ -31,6 +33,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  * @Modified by:
  */
 public class HttpConsumer implements WorkHandler<RingData<HttpBean>> {
+    private PowerImgInfService powerImgInfService=(PowerImgInfService)SpringContextUtil.getBean("powerImgInfService");
     private final static Logger logger=LoggerFactory.getLogger(HttpConsumer.class);
     @Override
     public void onEvent(RingData<HttpBean> event) throws Exception {

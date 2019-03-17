@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
  * @Date: Create in 18:17 2018/9/13
  * @Modified by:
  */
-public class DisruptorService {
+public  class DisruptorService {
     private static final Logger logger=LoggerFactory.getLogger(DisruptorService.class);
     private static RingBuffer<RingData<HttpBean>>  ringBuffer;
     static {
@@ -36,6 +36,7 @@ public class DisruptorService {
         ringBuffer.addGatingSequences(workerPool.getWorkerSequences());
         ExecutorService executorService=Executors.newFixedThreadPool(10);
         workerPool.start(executorService);
+
     }
     public static void onData(HttpBean bean){
         long seq=ringBuffer.next();

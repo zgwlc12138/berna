@@ -25,7 +25,7 @@ public class HttpServer implements Runnable{
         this.port = port;
     }
     private volatile boolean closed = false;
-    public void innit(){
+    private void innit(){
         closed=false;
         bossGroup=new NioEventLoopGroup();
         workGroup=new NioEventLoopGroup();
@@ -47,11 +47,11 @@ public class HttpServer implements Runnable{
                     }
                 });
     }
-    public void close(){
+    private void close(){
         bossGroup.shutdownGracefully();
         workGroup.shutdownGracefully();
     }
-    public void bind(){
+    private void bind(){
         try {
             ChannelFuture f=bootstrap.bind(port).sync();
             f.channel().closeFuture().sync();
